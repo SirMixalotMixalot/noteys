@@ -74,11 +74,10 @@ class _RegisterViewState extends State<RegisterView> {
                         return;
                       }
                       if (password.isEmpty) {
-                        () {
-                          _passwordDecor[1] = const InputDecoration(
-                              errorText: 'Please enter a password');
-                          passwordError = true;
-                        }();
+                        _passwordDecor[1] = const InputDecoration(
+                            errorText: 'Please enter a password');
+                        passwordError = true;
+                        ;
 
                         return;
                       }
