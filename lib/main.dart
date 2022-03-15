@@ -6,6 +6,7 @@ import 'firebase_options.dart';
 
 import 'views/register.dart';
 import 'views/login.dart';
+import 'views/verify_email.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,7 +24,11 @@ class Notey extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.purple,
       ),
-      home: const RegisterView(),
+      home: const HomePage(),
+      routes: {
+        '/login': (context) => const LoginPage(),
+        '/register': (context) => const RegisterView(),
+      },
     );
   }
 }
@@ -33,26 +38,23 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Home Page'),
-      ),
-      body: FutureBuilder(
-        future: Firebase.initializeApp(
-            options: DefaultFirebaseOptions.currentPlatform),
-        builder: (context, snapshot) {
-          switch (snapshot.connectionState) {
-            case ConnectionState.done:
-              final user = FirebaseAuth.instance.currentUser;
-              if (user != null && !user.emailVerified) {
-                user.sendEmailVerification();
-              }
-              return const Text("Firebase initialized! 🤩🥳🥳🥳");
-            default:
-              return const Text("Loading...");
-          }
-        },
-      ),
+    return FutureBuilder(
+      future: Firebase.initializeApp(
+          options: DefaultFirebaseOptions.currentPlatform),
+      builder: (context, snapshot) {
+        switch (snapshot.connectionState) {
+          case ConnectionState.done:
+            final user = FirebaseAuth.instance.currentUser;
+            if (user != null && !user.emailVerified) {
+              return const VerifyEmailPage();
+            }
+            return const LoginPage();
+          default:
+            return const Scaffold(
+              body: CircularProgressIndicator(),
+            );
+        }
+      },
     );
   }
 }
