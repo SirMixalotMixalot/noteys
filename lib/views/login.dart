@@ -1,6 +1,5 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-
+import 'dart:developer' as devtools show log;
 import "package:firebase_auth/firebase_auth.dart";
 
 class LoginPage extends StatefulWidget {
@@ -58,7 +57,9 @@ class _LoginPageState extends State<LoginPage> {
                   email: email,
                   password: password,
                 );
-                print(userCredential);
+                devtools.log(userCredential.toString());
+                Navigator.of(context)
+                    .pushNamedAndRemoveUntil('/notes', (route) => false);
               } on FirebaseAuthException catch (e) {
                 switch (e.code) {
                   case "user-not-found":
@@ -68,8 +69,8 @@ class _LoginPageState extends State<LoginPage> {
                   case "invalid-email":
 
                   default:
-                    print("Unhandled exception");
-                    print(e.code);
+                    devtools.log("Unhandled exception");
+                    devtools.log(e.code);
                     break;
                 }
               }

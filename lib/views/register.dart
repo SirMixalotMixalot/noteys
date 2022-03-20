@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'dart:developer' as devtools show log;
 import "package:firebase_auth/firebase_auth.dart";
 
 class RegisterView extends StatefulWidget {
@@ -78,10 +78,11 @@ class _RegisterViewState extends State<RegisterView> {
                 );
                 emailError = false;
                 passwordError = false;
-
-                print(userCredential);
+                Navigator.of(context)
+                    .pushNamedAndRemoveUntil('/verify', (_) => false);
+                devtools.log(userCredential.toString());
               } on FirebaseAuthException catch (e) {
-                print(e.code);
+                devtools.log(e.code);
                 if (e.code == 'weak-password') {
                   _passwordDecor[1] = const InputDecoration(
                     errorText: 'Password is too weak',

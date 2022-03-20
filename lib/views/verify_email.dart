@@ -23,6 +23,11 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
             },
             child: const Text('Send email verification'),
           ),
+          TextButton(
+            child: const Text("Return to login page"),
+            onPressed: () => Navigator.of(context)
+                .pushNamedAndRemoveUntil('/login', (_) => false),
+          )
         ],
       ),
     );

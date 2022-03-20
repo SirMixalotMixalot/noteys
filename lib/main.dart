@@ -1,4 +1,3 @@
-import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'dart:developer' as devtools show log;
@@ -30,6 +29,8 @@ class Notey extends StatelessWidget {
       routes: {
         '/login': (context) => const LoginPage(),
         '/register': (context) => const RegisterView(),
+        '/verify': (context) => const VerifyEmailPage(),
+        '/notes': (context) => const NotesView(),
       },
     );
   }
@@ -49,6 +50,7 @@ class HomePage extends StatelessWidget {
             final user = FirebaseAuth.instance.currentUser;
             final noUser = user == null;
             if (!noUser && !user.emailVerified) {
+              devtools.log(user.toString());
               return const VerifyEmailPage();
             }
             if (!noUser) {
@@ -56,8 +58,13 @@ class HomePage extends StatelessWidget {
             }
             return const LoginPage();
           default:
-            return const Scaffold(
-              body: CircularProgressIndicator(),
+            return Scaffold(
+              appBar: AppBar(
+                title: const Text("Loading..."),
+              ),
+              body: const Center(
+                child: CircularProgressIndicator(),
+              ),
             );
         }
       },
