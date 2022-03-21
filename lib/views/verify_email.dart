@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import "package:firebase_auth/firebase_auth.dart";
+import 'package:noteys/constants/routes.dart';
 
 class VerifyEmailPage extends StatefulWidget {
   const VerifyEmailPage({Key? key}) : super(key: key);
@@ -26,7 +27,7 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
           TextButton(
             child: const Text("Return to login page"),
             onPressed: () => Navigator.of(context)
-                .pushNamedAndRemoveUntil('/login', (_) => false),
+                .pushNamedAndRemoveUntil(loginRoute, (_) => false),
           )
         ],
       ),

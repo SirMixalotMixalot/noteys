@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'dart:developer' as devtools show log;
 
 import "package:firebase_auth/firebase_auth.dart";
+import 'package:noteys/constants/routes.dart';
 import 'firebase_options.dart';
 
 import 'views/register.dart';
@@ -27,10 +28,10 @@ class Notey extends StatelessWidget {
       ),
       home: const HomePage(),
       routes: {
-        '/login': (context) => const LoginPage(),
-        '/register': (context) => const RegisterView(),
-        '/verify': (context) => const VerifyEmailPage(),
-        '/notes': (context) => const NotesView(),
+        loginRoute: (context) => const LoginPage(),
+        registerRoute: (context) => const RegisterView(),
+        verifyRoute: (context) => const VerifyEmailPage(),
+        notesRoute: (context) => const NotesView(),
       },
     );
   }
@@ -121,7 +122,7 @@ class _NotesViewState extends State<NotesView> {
                   if (shouldLogOut) {
                     await FirebaseAuth.instance.signOut();
                     Navigator.of(context)
-                        .pushNamedAndRemoveUntil('/login', (_) => false);
+                        .pushNamedAndRemoveUntil(loginRoute, (_) => false);
                   }
                   break;
               }

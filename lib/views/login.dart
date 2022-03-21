@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:developer' as devtools show log;
 import "package:firebase_auth/firebase_auth.dart";
+import 'package:noteys/constants/routes.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -59,7 +60,7 @@ class _LoginPageState extends State<LoginPage> {
                 );
                 devtools.log(userCredential.toString());
                 Navigator.of(context)
-                    .pushNamedAndRemoveUntil('/notes', (route) => false);
+                    .pushNamedAndRemoveUntil(notesRoute, (route) => false);
               } on FirebaseAuthException catch (e) {
                 switch (e.code) {
                   case "user-not-found":
@@ -79,8 +80,8 @@ class _LoginPageState extends State<LoginPage> {
           ),
           TextButton(
             onPressed: () {
-              Navigator.of(context).pushNamedAndRemoveUntil(
-                  '/register', ModalRoute.withName('/'));
+              Navigator.of(context)
+                  .pushNamedAndRemoveUntil(registerRoute, (_) => false);
             },
             child: const Text("Not Registered? Register here"),
           ),
