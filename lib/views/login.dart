@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:developer' as devtools show log;
 import "package:firebase_auth/firebase_auth.dart";
 import 'package:noteys/constants/routes.dart';
+import '../utils/errors.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -64,16 +65,30 @@ class _LoginPageState extends State<LoginPage> {
               } on FirebaseAuthException catch (e) {
                 switch (e.code) {
                   case "user-not-found":
-
+                    await showErorDialog(
+                      context,
+                      'User was not found!',
+                    );
+                    break;
                   case "wrong-password":
-
+                    await showErorDialog(
+                      context,
+                      'Incorrect Password',
+                    );
+                    break;
                   case "invalid-email":
-
+                    await showErorDialog(
+                      context,
+                      "Invalid email!",
+                    );
+                    break;
                   default:
                     devtools.log("Unhandled exception");
                     devtools.log(e.code);
                     break;
                 }
+                _email.clear();
+                _password.clear();
               }
             },
             child: const Text("Log In"),
