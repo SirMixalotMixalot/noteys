@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'dart:developer' as devtools show log;
 import "package:firebase_auth/firebase_auth.dart";
 import 'package:noteys/constants/routes.dart';
+import 'package:noteys/utils/errors.dart';
 
 class RegisterView extends StatefulWidget {
   const RegisterView({Key? key}) : super(key: key);
@@ -46,6 +46,7 @@ class _RegisterViewState extends State<RegisterView> {
             controller: _email,
             decoration: _emailDecor[emailError ? 1 : 0],
             keyboardType: TextInputType.emailAddress,
+            onChanged: (_) => setState(() {}),
           ),
           TextField(
             controller: _password,
@@ -53,55 +54,32 @@ class _RegisterViewState extends State<RegisterView> {
             obscureText: true,
             enableSuggestions: false,
             autocorrect: false,
+            onChanged: (_) => setState(() {}),
           ),
           ElevatedButton(
-            onPressed: () async {
-              final email = _email.text;
-              final password = _password.text;
-              if (email.isEmpty) {
-                _emailDecor[1] =
-                    const InputDecoration(errorText: 'Please enter an email');
-                emailError = true;
-                return;
-              }
-              if (password.isEmpty) {
-                _passwordDecor[1] =
-                    const InputDecoration(errorText: 'Please enter a password');
-                passwordError = true;
+            onPressed: (_email.text.isEmpty || _password.text.isEmpty)
+                ? null
+                : () async {
+                    final email = _email.text;
+                    final password = _password.text;
 
-                return;
-              }
-              try {
-                final userCredential =
-                    await FirebaseAuth.instance.createUserWithEmailAndPassword(
-                  email: email,
-                  password: password,
-                );
-                emailError = false;
-                passwordError = false;
-                Navigator.of(context)
-                    .pushNamedAndRemoveUntil(verifyRoute, (_) => false);
-                devtools.log(userCredential.toString());
-              } on FirebaseAuthException catch (e) {
-                devtools.log(e.code);
-                if (e.code == 'weak-password') {
-                  _passwordDecor[1] = const InputDecoration(
-                    errorText: 'Password is too weak',
-                  );
-                  passwordError = true;
-                } else if (e.code == 'email-already-in-use') {
-                  _emailDecor[1] = const InputDecoration(
-                    errorText: 'Email in use',
-                  );
-                  emailError = true;
-                } else if (e.code == 'invalid-email') {
-                  _emailDecor[1] = const InputDecoration(
-                    errorText: 'Email is invalid',
-                  );
-                  emailError = true;
-                }
-              }
-            },
+                    try {
+                      await FirebaseAuth.instance
+                          .createUserWithEmailAndPassword(
+                        email: email,
+                        password: password,
+                      );
+                      emailError = false;
+                      passwordError = false;
+                      await FirebaseAuth.instance.currentUser
+                          ?.sendEmailVerification();
+                      Navigator.of(context).pushNamed(verifyRoute);
+                    } on FirebaseAuthException catch (e) {
+                      showErorDialog(context, "Error: ${e.code}");
+                      _email.clear();
+                      _password.clear();
+                    }
+                  },
             child: const Text("Register"),
           ),
           TextButton(

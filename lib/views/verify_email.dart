@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import "package:firebase_auth/firebase_auth.dart";
 import 'package:noteys/constants/routes.dart';
+import 'package:noteys/utils/errors.dart';
 
 class VerifyEmailPage extends StatefulWidget {
   const VerifyEmailPage({Key? key}) : super(key: key);
@@ -17,12 +18,17 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
       appBar: AppBar(title: const Text("Verify Page")),
       body: Column(
         children: [
-          const Text('Please verify your email address'),
+          const Text('Please check your email for a verification email'),
           TextButton(
+            child: const Text("Click here to resend"),
             onPressed: () async {
-              await FirebaseAuth.instance.currentUser?.sendEmailVerification();
+              try {
+                await FirebaseAuth.instance.currentUser
+                    ?.sendEmailVerification();
+              } catch (e) {
+                showErorDialog(context, "Error: ${e.toString()}");
+              }
             },
-            child: const Text('Send email verification'),
           ),
           TextButton(
             child: const Text("Return to login page"),
