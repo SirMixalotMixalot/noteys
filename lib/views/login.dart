@@ -59,7 +59,11 @@ class _LoginPageState extends State<LoginPage> {
                   email: email,
                   password: password,
                 );
-                devtools.log(userCredential.toString());
+                if (!userCredential.user!.emailVerified) {
+                  Navigator.of(context).pushNamed(verifyRoute);
+                  return;
+                }
+
                 Navigator.of(context)
                     .pushNamedAndRemoveUntil(notesRoute, (route) => false);
               } on FirebaseAuthException catch (e) {
