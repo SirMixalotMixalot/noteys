@@ -1,3 +1,6 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:noteys/firebase_options.dart';
+
 import 'exceptions.dart';
 import 'provider.dart';
 import 'user.dart';
@@ -86,4 +89,8 @@ class FireBaseAuthProvider implements AuthProvider {
       await user.sendEmailVerification();
     }
   }
+
+  @override
+  Future<void> initialize() async => await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform);
 }

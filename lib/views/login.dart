@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'dart:developer' as devtools show log;
-import "package:firebase_auth/firebase_auth.dart";
+
 import 'package:noteys/constants/routes.dart';
+import 'package:noteys/services/auth/exceptions.dart';
+import 'package:noteys/services/auth/service.dart';
 import '../utils/errors.dart';
 
 class LoginPage extends StatefulWidget {
@@ -24,6 +26,7 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    final service = AuthService.firebase();
     return Scaffold(
       appBar: AppBar(
         title: const Text("Login"),
@@ -54,45 +57,35 @@ class _LoginPageState extends State<LoginPage> {
                 return;
               }
               try {
-                final userCredential =
-                    await FirebaseAuth.instance.signInWithEmailAndPassword(
+                final user = await service.login(
                   email: email,
                   password: password,
                 );
-                if (!userCredential.user!.emailVerified) {
+                if (!user.isEmailVerified) {
                   Navigator.of(context).pushNamed(verifyRoute);
                   return;
                 }
 
                 Navigator.of(context)
                     .pushNamedAndRemoveUntil(notesRoute, (route) => false);
-              } on FirebaseAuthException catch (e) {
-                switch (e.code) {
-                  case "user-not-found":
-                    await showErorDialog(
-                      context,
-                      'User was not found!',
-                    );
-                    break;
-                  case "wrong-password":
-                    await showErorDialog(
-                      context,
-                      'Incorrect Password',
-                    );
-                    break;
-                  case "invalid-email":
-                    await showErorDialog(
-                      context,
-                      "Invalid email!",
-                    );
-                    break;
-                  default:
-                    devtools.log("Unhandled exception");
-                    devtools.log(e.code);
-                    break;
-                }
-                _email.clear();
+              } on UserNotFoundException {
+                await showErorDialog(
+                  context,
+                  'User was not found!',
+                );
+              } on WrongPasswordException {
+                await showErorDialog(
+                  context,
+                  'Incorrect Password',
+                );
+              } on GenericAuthException {
+                await showErorDialog(context, 'Authentication error');
+              } catch (x) {
+                devtools.log("Unhandled exception!!");
+                devtools.log(x.toString());
+              } finally {
                 _password.clear();
+                _email.clear();
               }
             },
             child: const Text("Log In"),

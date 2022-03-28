@@ -1,6 +1,9 @@
+import 'dart:developer' show log;
+
 import 'package:flutter/material.dart';
-import "package:firebase_auth/firebase_auth.dart";
 import 'package:noteys/constants/routes.dart';
+import 'package:noteys/services/auth/exceptions.dart';
+import 'package:noteys/services/auth/service.dart';
 import 'package:noteys/utils/errors.dart';
 
 class RegisterView extends StatefulWidget {
@@ -38,6 +41,7 @@ class _RegisterViewState extends State<RegisterView> {
 
   @override
   Widget build(BuildContext context) {
+    final service = AuthService.firebase();
     return Scaffold(
       appBar: AppBar(title: const Text('Register')),
       body: Column(
@@ -64,20 +68,25 @@ class _RegisterViewState extends State<RegisterView> {
                     final password = _password.text;
 
                     try {
-                      await FirebaseAuth.instance
-                          .createUserWithEmailAndPassword(
+                      await service.createUser(
                         email: email,
                         password: password,
                       );
                       emailError = false;
                       passwordError = false;
-                      await FirebaseAuth.instance.currentUser
-                          ?.sendEmailVerification();
+                      await service.sendEmailVerification();
                       Navigator.of(context).pushNamed(verifyRoute);
-                    } on FirebaseAuthException catch (e) {
-                      showErorDialog(context, "Error: ${e.code}");
-                      _email.clear();
-                      _password.clear();
+                    } on WeakPasswordException {
+                      showErorDialog(context, "Weak password");
+                    } on EmailAlreadyInUseException {
+                      showErorDialog(context, "Email already in use");
+                    } on InvalidEmailException {
+                      showErorDialog(context, "Invalid email");
+                    } on GenericAuthException {
+                      showErorDialog(context, "Failed to register!");
+                    } catch (e) {
+                      log("Unhandled exception");
+                      log(e.toString());
                     }
                   },
             child: const Text("Register"),

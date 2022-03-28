@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import "package:firebase_auth/firebase_auth.dart";
 import 'package:noteys/constants/routes.dart';
+import 'package:noteys/services/auth/service.dart';
 import 'package:noteys/utils/errors.dart';
 
 class VerifyEmailPage extends StatefulWidget {
@@ -23,8 +23,7 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
             child: const Text("Click here to resend"),
             onPressed: () async {
               try {
-                await FirebaseAuth.instance.currentUser
-                    ?.sendEmailVerification();
+                await AuthService.firebase().sendEmailVerification();
               } catch (e) {
                 showErorDialog(context, "Error: ${e.toString()}");
               }
