@@ -4,8 +4,8 @@ import 'package:meta/meta.dart';
 @immutable
 class User {
   final bool isEmailVerified;
-  const User(this.isEmailVerified);
+  const User({required this.isEmailVerified});
 
   factory User.fromFirebase(firebase_auth.User user) =>
-      User(user.emailVerified);
+      User(isEmailVerified: user.emailVerified);
 }
