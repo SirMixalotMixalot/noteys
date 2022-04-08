@@ -9,19 +9,19 @@ const notesTable = 'Notes';
 const userTable = 'Users';
 
 const createUserTable = '''
-  CREATE TABLE IF NOT EXISTS "Users" (
-	  "id"	INTEGER NOT NULL,
-	  "email"	TEXT NOT NULL UNIQUE,
-	  PRIMARY KEY("id" AUTOINCREMENT)
+  CREATE TABLE IF NOT EXISTS "$userTable" (
+	  "$idColumn"	INTEGER NOT NULL,
+	  "$emailColumn"	TEXT NOT NULL UNIQUE,
+	  PRIMARY KEY("$idColumn" AUTOINCREMENT)
 );
 ''';
 const createNotesTable = '''
-CREATE TABLE IF NOT EXISTS "Notes" (
-	"id"	INTEGER NOT NULL,
-	"user_id"	INTEGER NOT NULL,
-	"text"	TEXT,
-	"synced_with_cloud"	INTEGER NOT NULL DEFAULT 0,
-	FOREIGN KEY("user_id") REFERENCES "Users"("id"),
-	PRIMARY KEY("id" AUTOINCREMENT)
+CREATE TABLE IF NOT EXISTS "$notesTable" (
+	"$idColumn"	INTEGER NOT NULL,
+	"$userIdColumn INTEGER NOT NULL,
+	"$textColumn"	TEXT,
+	"$isSyncedColumn"	INTEGER NOT NULL DEFAULT 0,
+	FOREIGN KEY("$userIdColumn") REFERENCES "$userTable"("$userIdColumn"),
+	PRIMARY KEY("$idColumn" AUTOINCREMENT)
 );
 ''';
