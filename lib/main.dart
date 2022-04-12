@@ -3,11 +3,12 @@ import 'dart:developer' as devtools show log;
 
 import 'package:noteys/constants/routes.dart';
 import 'package:noteys/services/auth/service.dart';
+import 'package:noteys/views/notes/new_note.dart';
 
 import 'views/register.dart';
 import 'views/login.dart';
 import 'views/verify_email.dart';
-import 'views/notes.dart';
+import 'views/notes/homepage.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -31,6 +32,7 @@ class Notey extends StatelessWidget {
         registerRoute: (context) => const RegisterView(),
         verifyRoute: (context) => const VerifyEmailPage(),
         notesRoute: (context) => const NotesView(),
+        newNoteRoute: (context) => const NewNoteView(),
       },
     );
   }
