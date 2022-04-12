@@ -23,7 +23,7 @@ class Notey extends StatelessWidget {
     return MaterialApp(
       title: 'Noteys',
       theme: ThemeData(
-        primarySwatch: Colors.purple,
+        primarySwatch: Colors.orange,
       ),
       home: const HomePage(),
       routes: {

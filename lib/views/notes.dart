@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:noteys/constants/routes.dart';
 import 'package:noteys/services/auth/service.dart';
 
+import 'package:noteys/services/crud/notes.dart';
+
 enum MenuAction {
   logout,
 }
@@ -37,6 +39,20 @@ class NotesView extends StatefulWidget {
 }
 
 class _NotesViewState extends State<NotesView> {
+  String get userEmail => AuthService.firebase().currentUser!.email;
+  late final NotesService _notesService;
+  @override
+  void initState() {
+    _notesService = NotesService();
+    super.initState();
+  }
+
+  @override
+  void dispose() async {
+    await _notesService.close();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -67,7 +83,31 @@ class _NotesViewState extends State<NotesView> {
           )
         ],
       ),
-      body: const Text("Write something brother"),
+      body: FutureBuilder(
+        future: _notesService.getOrCreateUser(email: userEmail),
+        builder: (context, snapshot) {
+          switch (snapshot.connectionState) {
+            case ConnectionState.done:
+              return StreamBuilder(
+                stream: _notesService.allNotes,
+                builder: (context, notesSnapshot) {
+                  switch (notesSnapshot.connectionState) {
+                    case ConnectionState.waiting:
+                      return const Text('Waiting');
+                    default:
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                  }
+                },
+              );
+            default:
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+          }
+        },
+      ),
     );
   }
 }
