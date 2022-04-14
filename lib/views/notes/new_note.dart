@@ -85,13 +85,16 @@ class _NewNoteViewState extends State<NewNoteView> {
             case ConnectionState.done:
               _note = snapshot.data as DBNote;
               _setupController();
-              return TextField(
-                controller: _controller,
-                keyboardType: TextInputType.multiline,
-                maxLines: null,
-                decoration: const InputDecoration(
-                  hintText: "Notes away...",
-                  border: InputBorder.none,
+              return Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextField(
+                  controller: _controller,
+                  keyboardType: TextInputType.multiline,
+                  maxLines: null,
+                  decoration: const InputDecoration(
+                    hintText: "Notes away...",
+                    border: InputBorder.none,
+                  ),
                 ),
               );
             default:

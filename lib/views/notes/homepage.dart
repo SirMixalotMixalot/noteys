@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:noteys/constants/routes.dart';
 import 'package:noteys/services/auth/service.dart';
+import 'package:noteys/services/crud/db_note.dart';
 
 import 'package:noteys/services/crud/notes.dart';
 
@@ -45,12 +46,6 @@ class _NotesViewState extends State<NotesView> {
   void initState() {
     _notesService = NotesService();
     super.initState();
-  }
-
-  @override
-  void dispose() async {
-    super.dispose();
-    await _notesService.close();
   }
 
   @override
@@ -102,7 +97,29 @@ class _NotesViewState extends State<NotesView> {
                   switch (notesSnapshot.connectionState) {
                     case ConnectionState.active:
                     case ConnectionState.waiting:
-                      return const Text('Waiting');
+                      if (notesSnapshot.hasData) {
+                        final allNotes = notesSnapshot.data as List<DBNote>;
+                        return Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: ListView.builder(
+                            itemBuilder: (context, index) {
+                              return ListTile(
+                                title: Text(
+                                  allNotes[index].text,
+                                  maxLines: 1,
+                                  softWrap: true,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              );
+                            },
+                            itemCount: allNotes.length,
+                          ),
+                        );
+                      } else {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      }
                     default:
                       return const Center(
                         child: CircularProgressIndicator(),

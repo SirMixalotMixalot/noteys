@@ -12,12 +12,18 @@ import 'db_user.dart';
 
 class NotesService {
   Database? _db;
-  NotesService._sharedInstance();
+  NotesService._sharedInstance() {
+    _noteStreamController = StreamController<List<DBNote>>.broadcast(
+      onListen: () {
+        _noteStreamController.sink.add(_notes);
+      },
+    );
+  }
 
   static final NotesService _shared = NotesService._sharedInstance();
   factory NotesService() => _shared;
   List<DBNote> _notes = [];
-  final _noteStreamController = StreamController<List<DBNote>>.broadcast();
+  late final StreamController<List<DBNote>> _noteStreamController;
   Future<List<Map<String, Object?>>> queryUser(String email) async {
     final db = await _getDataBaseOrOpen();
     final results = await db.query(
