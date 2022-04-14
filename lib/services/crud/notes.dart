@@ -223,11 +223,12 @@ class NotesService {
       final docsPath = await getApplicationDocumentsDirectory();
       final dbPath = join(docsPath.path, dbName);
 
-      _db = await openDatabase(dbPath);
+      final db = await openDatabase(dbPath);
 
-      await _db?.execute(createUserTable);
+      await db.execute(createUserTable);
 
-      await _db?.execute(createNotesTable);
+      await db.execute(createNotesTable);
+      _db = db;
       await _cacheNotes();
     } on MissingPlatformDirectoryException {
       throw UnableToGetDocumentDirectory();
@@ -262,6 +263,6 @@ class NotesService {
       await open();
     }
 
-    return db!;
+    return _db!;
   }
 }

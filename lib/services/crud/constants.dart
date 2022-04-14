@@ -18,10 +18,11 @@ const createUserTable = '''
 const createNotesTable = '''
 CREATE TABLE IF NOT EXISTS "$notesTable" (
 	"$idColumn"	INTEGER NOT NULL,
-	"$userIdColumn INTEGER NOT NULL,
+	"$userIdColumn" INTEGER NOT NULL,
 	"$textColumn"	TEXT,
 	"$isSyncedColumn"	INTEGER NOT NULL DEFAULT 0,
-	FOREIGN KEY("$userIdColumn") REFERENCES "$userTable"("$userIdColumn"),
-	PRIMARY KEY("$idColumn" AUTOINCREMENT)
+  PRIMARY KEY("$idColumn" AUTOINCREMENT),
+	FOREIGN KEY("$userIdColumn") REFERENCES "$userTable"("$userIdColumn")
+	
 );
 ''';

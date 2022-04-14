@@ -49,8 +49,8 @@ class _NotesViewState extends State<NotesView> {
 
   @override
   void dispose() async {
-    await _notesService.close();
     super.dispose();
+    await _notesService.close();
   }
 
   @override
@@ -100,6 +100,7 @@ class _NotesViewState extends State<NotesView> {
                 stream: _notesService.allNotes,
                 builder: (context, notesSnapshot) {
                   switch (notesSnapshot.connectionState) {
+                    case ConnectionState.active:
                     case ConnectionState.waiting:
                       return const Text('Waiting');
                     default:
