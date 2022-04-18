@@ -2,7 +2,7 @@ import 'dart:developer' show log;
 
 import 'package:flutter/material.dart';
 import 'package:noteys/constants/routes.dart';
-import 'package:noteys/dialogs/error_dialog.dart';
+import 'package:noteys/utils/dialogs/error_dialog.dart';
 import 'package:noteys/services/auth/exceptions.dart';
 import 'package:noteys/services/auth/service.dart';
 

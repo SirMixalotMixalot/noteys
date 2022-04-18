@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:noteys/constants/routes.dart';
-import 'package:noteys/dialogs/log_out.dart';
+import 'package:noteys/utils/dialogs/log_out.dart';
 import 'package:noteys/services/auth/service.dart';
 import 'package:noteys/services/crud/db_note.dart';
 

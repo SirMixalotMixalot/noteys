@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:noteys/dialogs/delete_note.dart';
+import 'package:noteys/utils/dialogs/delete_note.dart';
 import 'package:noteys/services/crud/db_note.dart';
 
 typedef DeleteNoteCallBack = void Function(DBNote note);
