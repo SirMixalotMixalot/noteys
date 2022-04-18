@@ -1,35 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:noteys/constants/routes.dart';
+import 'package:noteys/dialogs/log_out.dart';
 import 'package:noteys/services/auth/service.dart';
 import 'package:noteys/services/crud/db_note.dart';
 
 import 'package:noteys/services/crud/notes.dart';
+import 'package:noteys/views/notes/notes_list.dart';
 
 enum MenuAction {
   logout,
-}
-
-Future<bool> showLogOutDialog(BuildContext context) {
-  return showDialog<bool>(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text("Log out?"),
-          content: const Text("Are you sure you want to log out?"),
-          actions: [
-            TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop(false);
-                },
-                child: const Text("No")),
-            TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop(true);
-                },
-                child: const Text("Yes, Log out")),
-          ],
-        );
-      }).then((value) => value ?? false);
 }
 
 class NotesView extends StatefulWidget {
@@ -99,22 +78,11 @@ class _NotesViewState extends State<NotesView> {
                     case ConnectionState.waiting:
                       if (notesSnapshot.hasData) {
                         final allNotes = notesSnapshot.data as List<DBNote>;
-                        return Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: ListView.builder(
-                            itemBuilder: (context, index) {
-                              return ListTile(
-                                title: Text(
-                                  allNotes[index].text,
-                                  maxLines: 1,
-                                  softWrap: true,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              );
-                            },
-                            itemCount: allNotes.length,
-                          ),
-                        );
+                        return NotesList(
+                            allNotes: allNotes,
+                            onDelete: (note) async {
+                              await _notesService.deleteNote(id: note.id);
+                            });
                       } else {
                         return const Center(
                           child: CircularProgressIndicator(),

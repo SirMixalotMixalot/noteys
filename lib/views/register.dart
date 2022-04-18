@@ -2,9 +2,9 @@ import 'dart:developer' show log;
 
 import 'package:flutter/material.dart';
 import 'package:noteys/constants/routes.dart';
+import 'package:noteys/dialogs/error_dialog.dart';
 import 'package:noteys/services/auth/exceptions.dart';
 import 'package:noteys/services/auth/service.dart';
-import 'package:noteys/utils/errors.dart';
 
 class RegisterView extends StatefulWidget {
   const RegisterView({Key? key}) : super(key: key);
@@ -77,13 +77,13 @@ class _RegisterViewState extends State<RegisterView> {
                       await service.sendEmailVerification();
                       Navigator.of(context).pushNamed(verifyRoute);
                     } on WeakPasswordException {
-                      showErorDialog(context, "Weak password");
+                      showErrorDialog(context, "Weak password");
                     } on EmailAlreadyInUseException {
-                      showErorDialog(context, "Email already in use");
+                      showErrorDialog(context, "Email already in use");
                     } on InvalidEmailException {
-                      showErorDialog(context, "Invalid email");
+                      showErrorDialog(context, "Invalid email");
                     } on GenericAuthException {
-                      showErorDialog(context, "Failed to register!");
+                      showErrorDialog(context, "Failed to register!");
                     } catch (e) {
                       log("Unhandled exception");
                       log(e.toString());

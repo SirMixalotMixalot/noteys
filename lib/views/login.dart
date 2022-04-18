@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:developer' as devtools show log;
 
 import 'package:noteys/constants/routes.dart';
+import 'package:noteys/dialogs/error_dialog.dart';
 import 'package:noteys/services/auth/exceptions.dart';
 import 'package:noteys/services/auth/service.dart';
 import '../utils/errors.dart';
@@ -69,17 +70,17 @@ class _LoginPageState extends State<LoginPage> {
                 Navigator.of(context)
                     .pushNamedAndRemoveUntil(notesRoute, (route) => false);
               } on UserNotFoundException {
-                await showErorDialog(
+                await showErrorDialog(
                   context,
                   'User was not found!',
                 );
               } on WrongPasswordException {
-                await showErorDialog(
+                await showErrorDialog(
                   context,
                   'Incorrect Password',
                 );
               } on GenericAuthException {
-                await showErorDialog(context, 'Authentication error');
+                await showErrorDialog(context, 'Authentication error');
               } catch (x) {
                 devtools.log("Unhandled exception!!");
                 devtools.log(x.toString());

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 import 'package:noteys/constants/routes.dart';
+import 'package:noteys/dialogs/error_dialog.dart';
 import 'package:noteys/services/auth/service.dart';
-import 'package:noteys/utils/errors.dart';
 
 class VerifyEmailPage extends StatefulWidget {
   const VerifyEmailPage({Key? key}) : super(key: key);
@@ -25,7 +25,7 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
               try {
                 await AuthService.firebase().sendEmailVerification();
               } catch (e) {
-                showErorDialog(context, "Error: ${e.toString()}");
+                showErrorDialog(context, "Error: ${e.toString()}");
               }
             },
           ),

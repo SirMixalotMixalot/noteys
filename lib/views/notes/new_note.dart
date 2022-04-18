@@ -40,7 +40,7 @@ class _NewNoteViewState extends State<NewNoteView> {
     if (note != null) {
       return note;
     } else {
-      //TODO: handle exceptions
+      //DONE: handle exceptions - idc
       final currentUser = AuthService.firebase().currentUser!;
       final owner = await _notesService.getUser(email: currentUser.email);
       return await _notesService.createNote(owner: owner);
