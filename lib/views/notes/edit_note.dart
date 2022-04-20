@@ -2,19 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:noteys/services/auth/service.dart';
 import 'package:noteys/services/crud/db_note.dart';
 import 'package:noteys/services/crud/notes.dart';
+import 'package:noteys/utils/generics/get_args.dart';
 
-class NewNoteView extends StatefulWidget {
-  const NewNoteView({Key? key}) : super(key: key);
+class UpdateNoteView extends StatefulWidget {
+  const UpdateNoteView({Key? key}) : super(key: key);
 
   @override
-  State<NewNoteView> createState() => _NewNoteViewState();
+  State<UpdateNoteView> createState() => _UpdateNoteViewState();
 }
 
-class _NewNoteViewState extends State<NewNoteView> {
+class _UpdateNoteViewState extends State<UpdateNoteView> {
   DBNote? _note;
   late final NotesService _notesService;
   late final TextEditingController _controller;
-
   @override
   void initState() {
     _notesService = NotesService();
@@ -35,7 +35,14 @@ class _NewNoteViewState extends State<NewNoteView> {
     _controller.addListener(onTextChanged);
   }
 
-  Future<DBNote> createNewNote() async {
+  Future<DBNote> createOrGetExistingNote() async {
+    final widgetNote = context.getArgument<DBNote>();
+    if (widgetNote != null) {
+      _note = widgetNote;
+      _controller.text = widgetNote.text;
+
+      return widgetNote;
+    }
     final note = _note;
     if (note != null) {
       return note;
@@ -43,7 +50,9 @@ class _NewNoteViewState extends State<NewNoteView> {
       //DONE: handle exceptions - idc
       final currentUser = AuthService.firebase().currentUser!;
       final owner = await _notesService.getUser(email: currentUser.email);
-      return await _notesService.createNote(owner: owner);
+      final n = await _notesService.createNote(owner: owner);
+      _note = n;
+      return n;
     }
   }
 
@@ -75,15 +84,14 @@ class _NewNoteViewState extends State<NewNoteView> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'New Note',
+          'Edit Note',
         ),
       ),
       body: FutureBuilder(
-        future: createNewNote(),
+        future: createOrGetExistingNote(),
         builder: (ctx, snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.done:
-              _note = snapshot.data as DBNote;
               _setupController();
               return Padding(
                 padding: const EdgeInsets.all(8.0),

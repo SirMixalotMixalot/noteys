@@ -3,7 +3,7 @@ import 'dart:developer' as devtools show log;
 
 import 'package:noteys/constants/routes.dart';
 import 'package:noteys/services/auth/service.dart';
-import 'package:noteys/views/notes/new_note.dart';
+import 'package:noteys/views/notes/edit_note.dart';
 
 import 'views/register.dart';
 import 'views/login.dart';
@@ -32,7 +32,7 @@ class Notey extends StatelessWidget {
         registerRoute: (context) => const RegisterView(),
         verifyRoute: (context) => const VerifyEmailPage(),
         notesRoute: (context) => const NotesView(),
-        newNoteRoute: (context) => const NewNoteView(),
+        editNoteRoute: (context) => const UpdateNoteView(),
       },
     );
   }
