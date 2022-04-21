@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:noteys/extensions/filter.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
@@ -12,6 +13,7 @@ import 'db_user.dart';
 
 class NotesService {
   Database? _db;
+  DBUser? _user;
   NotesService._sharedInstance() {
     _noteStreamController = StreamController<List<DBNote>>.broadcast(
       onListen: () {
@@ -37,7 +39,7 @@ class NotesService {
 
   Future _cacheNotes() async {
     final notes = await getAllNotes();
-    _updatesNotes(() => _notes = notes.toList());
+    _updatesNotes(() => _notes = (notes.toList()));
   }
 
   Future<DBNote> updateNote({
@@ -90,12 +92,29 @@ class NotesService {
     );
   }
 
-  Stream<List<DBNote>> get allNotes => _noteStreamController.stream;
-  Future<Iterable<DBNote>> getAllNotes() async {
+  Stream<List<DBNote>> get allNotes =>
+      _noteStreamController.stream.filter((note) {
+        final currentUser = _user;
+        if (currentUser == null) {
+          throw UserShouldBeDefined();
+        } else {
+          return note.userId == currentUser.id;
+        }
+      });
+  Future<Iterable<DBNote>> getAllNotesBy({required DBUser user}) async {
     final db = await _getDataBaseOrOpen();
 
-    final results = await db.query(notesTable);
+    final results = await db.query(
+      notesTable,
+      where: '$idColumn = ?',
+      whereArgs: [user.id],
+    );
     return results.map(DBNote.fromRow);
+  }
+
+  Future<Iterable<DBNote>> getAllNotes() async {
+    final db = await _getDataBaseOrOpen();
+    return (await db.query(notesTable)).map(DBNote.fromRow);
   }
 
   void _updatesNotes(Function mutateNotes) {
@@ -134,6 +153,7 @@ class NotesService {
     }
   }
 
+  //TODO: evaluate the usefulness of this function
   Future<int> deleteAllNotes() async {
     final db = await _getDataBaseOrOpen();
     _updatesNotes(() => _notes = []);
@@ -188,14 +208,23 @@ class NotesService {
     }
   }
 
-  Future<DBUser> getOrCreateUser({required String email}) async {
+  Future<DBUser> getOrCreateUser({
+    required String email,
+    bool setAsCurrentUser = true,
+  }) async {
+    DBUser user;
     try {
-      return await getUser(email: email);
+      user = await getUser(email: email);
     } on UserDoesNotExist {
-      return await createUser(email: email);
+      user = await createUser(email: email);
     } catch (e) {
       rethrow;
     }
+    if (setAsCurrentUser) {
+      _user = user;
+    }
+
+    return user;
   }
 
   Future<DBUser> createUser({required String email}) async {

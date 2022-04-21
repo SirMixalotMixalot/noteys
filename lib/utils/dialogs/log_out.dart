@@ -7,10 +7,10 @@ Future<bool> showLogOutDialog(BuildContext context) {
       title: const Text("Log out?"),
       content: const Text("Are you sure you want to log out?"),
       optionBuilder: () => {
+            const Text("No"): false,
             const Text(
               "Yes",
               style: TextStyle(color: Colors.red),
             ): true,
-            const Text("No"): false,
           }).then((v) => v ?? false);
 }
