@@ -24,7 +24,10 @@ class Notey extends StatelessWidget {
     return MaterialApp(
       title: 'Noteys',
       theme: ThemeData(
-        primarySwatch: Colors.orange,
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Colors.white,
+          foregroundColor: Colors.black,
+        ),
       ),
       home: const HomePage(),
       routes: {
