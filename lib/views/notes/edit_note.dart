@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:noteys/services/auth/service.dart';
 import 'package:noteys/services/cloud/firebase_cloud_storage.dart';
 import 'package:noteys/services/cloud/note.dart';
+import 'package:noteys/utils/dialogs/cannot_share_empty_note.dart';
 
 import 'package:noteys/utils/generics/get_args.dart';
+import 'package:share_plus/share_plus.dart';
 
 class UpdateNoteView extends StatefulWidget {
   const UpdateNoteView({Key? key}) : super(key: key);
@@ -86,6 +88,18 @@ class _UpdateNoteViewState extends State<UpdateNoteView> {
         title: const Text(
           'Edit Note',
         ),
+        actions: [
+          IconButton(
+              onPressed: () {
+                final text = _controller.text;
+                if (_note == null || text.isEmpty) {
+                  showCannotShareEmptyNoteDialog(context);
+                } else {
+                  Share.share(text);
+                }
+              },
+              icon: const Icon(Icons.share))
+        ],
       ),
       body: FutureBuilder(
         future: createOrGetExistingNote(),
