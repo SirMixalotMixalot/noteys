@@ -1,4 +1,4 @@
-import 'package:flutter/foundation.dart';
+/* import 'package:flutter/foundation.dart';
 
 import 'constants.dart';
 
@@ -23,3 +23,4 @@ class DBUser {
   @override
   int get hashCode => id.hashCode;
 }
+ */

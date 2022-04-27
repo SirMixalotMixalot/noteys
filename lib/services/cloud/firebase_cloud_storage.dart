@@ -6,12 +6,18 @@ import 'package:noteys/services/cloud/note.dart';
 class FirebaseCloudStorage {
   final notes = FirebaseFirestore.instance.collection('notes');
 
-  void createNewNote({required String ownerId}) async {
+  Future<CloudNote> createNewNote({required String ownerId}) async {
     try {
-      await notes.add({
+      final document = await notes.add({
         ownerIdField: ownerId,
         textField: '',
       });
+      final fetchedNote = await document.get();
+      return CloudNote(
+        id: fetchedNote.id,
+        ownerId: ownerId,
+        text: '',
+      );
     } catch (_) {
       throw CouldNotCreateNote();
     }

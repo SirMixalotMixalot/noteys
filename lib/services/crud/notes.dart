@@ -1,4 +1,4 @@
-import 'dart:async';
+/* import 'dart:async';
 import 'dart:developer';
 
 import 'package:noteys/extensions/filter.dart';
@@ -9,9 +9,9 @@ import 'package:sqflite/sqflite.dart';
 import 'constants.dart';
 import 'db_note.dart';
 import 'exceptions.dart';
-import 'db_user.dart';
+import 'db_user.dart'; */
 
-class NotesService {
+/* class NotesService {
   Database? _db;
   DBUser? _user;
   NotesService._sharedInstance() {
@@ -300,4 +300,4 @@ class NotesService {
 
     return _db!;
   }
-}
+} */

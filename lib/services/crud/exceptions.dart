@@ -1,4 +1,4 @@
-class DataBaseAleadyOpenException implements Exception {}
+/* class DataBaseAleadyOpenException implements Exception {}
 
 class UnableToGetDocumentDirectory implements Exception {}
 
@@ -16,4 +16,4 @@ class CouldNotFindNote implements Exception {}
 
 class CouldNotUpdateNote implements Exception {}
 
-class UserShouldBeDefined implements Exception {}
+class UserShouldBeDefined implements Exception {} */

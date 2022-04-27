@@ -1,4 +1,4 @@
-import 'constants.dart';
+/* import 'constants.dart';
 
 class DBNote {
   final int id;
@@ -23,3 +23,4 @@ class DBNote {
   @override
   int get hashCode => id.hashCode;
 }
+ */
