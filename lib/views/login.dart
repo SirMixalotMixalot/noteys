@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'dart:developer' as devtools show log;
 
 import 'package:noteys/constants/routes.dart';
+import 'package:noteys/services/auth/bloc/bloc.dart';
+import 'package:noteys/services/auth/bloc/events.dart';
 import 'package:noteys/utils/dialogs/error_dialog.dart';
 import 'package:noteys/services/auth/exceptions.dart';
-import 'package:noteys/services/auth/service.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -26,7 +28,6 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    final service = AuthService.firebase();
     return Scaffold(
       appBar: AppBar(
         title: const Text("Login"),
@@ -57,22 +58,12 @@ class _LoginPageState extends State<LoginPage> {
                 return;
               }
               try {
-                final user = await service.login(
-                  email: email,
-                  password: password,
-                );
-                if (!user.isEmailVerified) {
-                  Navigator.of(context).pushNamed(verifyRoute);
-                  return;
-                }
-
-                Navigator.of(context)
-                    .pushNamedAndRemoveUntil(notesRoute, (route) => false);
-              } on UserNotFoundException {
-                await showErrorDialog(
-                  context,
-                  'User was not found!',
-                );
+                context.read<AuthBloc>().add(
+                      AuthEventLogIn(
+                        email,
+                        password,
+                      ),
+                    );
               } on WrongPasswordException {
                 await showErrorDialog(
                   context,
