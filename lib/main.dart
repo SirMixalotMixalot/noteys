@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:noteys/constants/routes.dart';
+import 'package:noteys/helpers/loading/loading_screen.dart';
 import 'package:noteys/services/auth/bloc/bloc.dart';
 import 'package:noteys/services/auth/bloc/events.dart';
 import 'package:noteys/services/auth/bloc/states.dart';
@@ -29,6 +30,7 @@ class Notey extends StatelessWidget {
     return MaterialApp(
       title: 'Noteys',
       theme: ThemeData(
+        primarySwatch: Colors.blueGrey,
         appBarTheme: const AppBarTheme(
           backgroundColor: Colors.white,
           foregroundColor: Colors.black,
@@ -51,7 +53,15 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     context.read<AuthBloc>().add(const AuthEventInitialized());
-    return BlocBuilder<AuthBloc, AuthState>(
+    return BlocConsumer<AuthBloc, AuthState>(
+      listener: (context, state) {
+        if (state.isLoading) {
+          LoadingScreen().show(
+            context: context,
+            text: state.loadingText ?? 'Unreachable',
+          );
+        }
+      },
       builder: ((context, state) {
         if (state is AuthStateLoggedIn) {
           return const NotesView();
