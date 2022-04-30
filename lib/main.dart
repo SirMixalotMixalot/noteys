@@ -39,10 +39,6 @@ class Notey extends StatelessWidget {
         child: const HomePage(),
       ),
       routes: {
-        loginRoute: (context) => const LoginPage(),
-        registerRoute: (context) => const RegisterView(),
-        verifyRoute: (context) => const VerifyEmailPage(),
-        notesRoute: (context) => const NotesView(),
         editNoteRoute: (context) => const UpdateNoteView(),
       },
     );
@@ -59,10 +55,12 @@ class HomePage extends StatelessWidget {
       builder: ((context, state) {
         if (state is AuthStateLoggedIn) {
           return const NotesView();
-        } else if (state is AuthStateNotVerified) {
+        } else if (state is AuthStateShouldVerify) {
           return const VerifyEmailPage();
         } else if (state is AuthStateLoggedOut) {
           return const LoginPage();
+        } else if (state is AuthStateNotRegistered) {
+          return const RegisterView();
         } else {
           return const Scaffold(
             body: Center(

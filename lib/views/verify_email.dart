@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:noteys/constants/routes.dart';
-import 'package:noteys/utils/dialogs/error_dialog.dart';
-import 'package:noteys/services/auth/service.dart';
+import 'package:noteys/services/auth/bloc/bloc.dart';
+import 'package:noteys/services/auth/bloc/events.dart';
 
 class VerifyEmailPage extends StatefulWidget {
   const VerifyEmailPage({Key? key}) : super(key: key);
@@ -22,17 +22,16 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
           TextButton(
             child: const Text("Click here to resend"),
             onPressed: () async {
-              try {
-                await AuthService.firebase().sendEmailVerification();
-              } catch (e) {
-                showErrorDialog(context, "Error: ${e.toString()}");
-              }
+              context.read<AuthBloc>().add(
+                    const AuthEventSendVerifyEmail(),
+                  );
             },
           ),
           TextButton(
             child: const Text("Return to login page"),
-            onPressed: () => Navigator.of(context)
-                .pushNamedAndRemoveUntil(loginRoute, (_) => false),
+            onPressed: () => context.read<AuthBloc>().add(
+                  const AuthEventToLogIn(),
+                ),
           )
         ],
       ),
