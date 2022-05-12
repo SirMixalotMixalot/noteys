@@ -6,7 +6,6 @@ import 'package:noteys/services/auth/bloc/events.dart';
 import 'package:noteys/services/auth/bloc/states.dart';
 import 'package:noteys/utils/dialogs/error_dialog.dart';
 import 'package:noteys/services/auth/exceptions.dart';
-import 'package:noteys/utils/dialogs/loading_dialog.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -45,50 +44,62 @@ class _LoginPageState extends State<LoginPage> {
             }
           }
         },
-        child: Column(
-          children: [
-            ElevatedButton(
-              onPressed: () async {
-                final email = _email.text;
-                final password = _password.text;
-                if (email.isEmpty || password.isEmpty) {
-                  return;
-                }
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [
+              ElevatedButton(
+                onPressed: () async {
+                  final email = _email.text;
+                  final password = _password.text;
+                  if (email.isEmpty || password.isEmpty) {
+                    return;
+                  }
 
-                context.read<AuthBloc>().add(
-                      AuthEventLogIn(
-                        email,
-                        password,
-                      ),
-                    );
-              },
-              child: const Text("Log In"),
-            ),
-            TextField(
-              controller: _email,
-              decoration: const InputDecoration(
-                hintText: "Enter your email here",
+                  context.read<AuthBloc>().add(
+                        AuthEventLogIn(
+                          email,
+                          password,
+                        ),
+                      );
+                },
+                child: const Text("Log In"),
               ),
-              keyboardType: TextInputType.emailAddress,
-            ),
-            TextField(
-              controller: _password,
-              decoration: const InputDecoration(
-                hintText: "Enter your email's password here",
+              TextField(
+                controller: _email,
+                decoration: const InputDecoration(
+                  hintText: "Enter your email here",
+                ),
+                keyboardType: TextInputType.emailAddress,
               ),
-              obscureText: true,
-              enableSuggestions: false,
-              autocorrect: false,
-            ),
-            TextButton(
-              onPressed: () {
-                context.read<AuthBloc>().add(
-                      const AuthEventShouldRegister(),
-                    );
-              },
-              child: const Text("Not Registered? Register here"),
-            ),
-          ],
+              TextField(
+                controller: _password,
+                decoration: const InputDecoration(
+                  hintText: "Enter your email's password here",
+                ),
+                obscureText: true,
+                enableSuggestions: false,
+                autocorrect: false,
+              ),
+              TextButton(
+                onPressed: () {
+                  context.read<AuthBloc>().add(
+                        const AuthEventShouldRegister(),
+                      );
+                },
+                child: const Text("Not Registered? Register here"),
+              ),
+              const SizedBox(
+                height: 8.0,
+              ),
+              TextButton(
+                onPressed: () {
+                  context.read<AuthBloc>().add(const AuthEventForgotPassword());
+                },
+                child: const Text("Forgot password? Reset it"),
+              ),
+            ],
+          ),
         ),
       ),
     );

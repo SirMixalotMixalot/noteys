@@ -53,3 +53,13 @@ class AuthStateNotRegistered extends AuthState {
 class AuthStateRegistered extends AuthState {
   const AuthStateRegistered({required bool isLoading}) : super(isLoading);
 }
+
+class AuthStateForgotPassword extends AuthState {
+  final bool hasSentEmail;
+  final Exception? exception;
+  const AuthStateForgotPassword({
+    required bool isLoading,
+    required this.hasSentEmail,
+    required this.exception,
+  }) : super(isLoading);
+}

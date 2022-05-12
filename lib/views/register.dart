@@ -57,43 +57,46 @@ class _RegisterViewState extends State<RegisterView> {
       },
       child: Scaffold(
         appBar: AppBar(title: const Text('Register')),
-        body: Column(
-          children: [
-            TextField(
-              controller: _email,
-              decoration: _emailDecor[emailError ? 1 : 0],
-              keyboardType: TextInputType.emailAddress,
-              onChanged: (_) => setState(() {}),
-            ),
-            TextField(
-              controller: _password,
-              decoration: _passwordDecor[passwordError ? 1 : 0],
-              obscureText: true,
-              enableSuggestions: false,
-              autocorrect: false,
-              onChanged: (_) => setState(() {}),
-            ),
-            ElevatedButton(
-              onPressed: (_email.text.isEmpty || _password.text.isEmpty)
-                  ? null
-                  : () async {
-                      final email = _email.text;
-                      final password = _password.text;
-                      context.read<AuthBloc>().add(
-                            AuthEventRegister(
-                              email: email,
-                              password: password,
-                            ),
-                          );
-                    },
-              child: const Text("Register"),
-            ),
-            TextButton(
-                onPressed: () {
-                  context.read<AuthBloc>().add(const AuthEventToLogIn());
-                },
-                child: const Text("Already Registered? Sign in here!"))
-          ],
+        body: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: [
+              TextField(
+                controller: _email,
+                decoration: _emailDecor[emailError ? 1 : 0],
+                keyboardType: TextInputType.emailAddress,
+                onChanged: (_) => setState(() {}),
+              ),
+              TextField(
+                controller: _password,
+                decoration: _passwordDecor[passwordError ? 1 : 0],
+                obscureText: true,
+                enableSuggestions: false,
+                autocorrect: false,
+                onChanged: (_) => setState(() {}),
+              ),
+              ElevatedButton(
+                onPressed: (_email.text.isEmpty || _password.text.isEmpty)
+                    ? null
+                    : () async {
+                        final email = _email.text;
+                        final password = _password.text;
+                        context.read<AuthBloc>().add(
+                              AuthEventRegister(
+                                email: email,
+                                password: password,
+                              ),
+                            );
+                      },
+                child: const Text("Register"),
+              ),
+              TextButton(
+                  onPressed: () {
+                    context.read<AuthBloc>().add(const AuthEventToLogIn());
+                  },
+                  child: const Text("Already Registered? Sign in here!"))
+            ],
+          ),
         ),
       ),
     );

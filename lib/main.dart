@@ -7,6 +7,7 @@ import 'package:noteys/services/auth/bloc/bloc.dart';
 import 'package:noteys/services/auth/bloc/events.dart';
 import 'package:noteys/services/auth/bloc/states.dart';
 import 'package:noteys/services/auth/firebase_auth.dart';
+import 'package:noteys/views/forgot_password.dart';
 import 'package:noteys/views/notes/edit_note.dart';
 
 import 'views/register.dart';
@@ -71,6 +72,8 @@ class HomePage extends StatelessWidget {
           return const LoginPage();
         } else if (state is AuthStateNotRegistered) {
           return const RegisterView();
+        } else if (state is AuthStateForgotPassword) {
+          return const ForgotPassword();
         } else {
           return const Scaffold(
             body: Center(
